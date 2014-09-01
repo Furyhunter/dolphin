@@ -229,14 +229,20 @@ public:
 				if (controls[i]->control_ref->State() > settings[0]->value) //threshold
 				{
 					*analog = 1.0;
-					*digital |= *bitmasks;
+					if (_delay_frame[i] > 1)
+						*digital |= *bitmasks;
+					else
+						_delay_frame[i]++;
 				}
 				else
 				{
 					*analog = controls[i+trig_count]->control_ref->State();
+					_delay_frame[i] = 0;
 				}
 			}
 		}
+	private:
+		int16_t _delay_frame[8];
 	};
 
 	class Triggers : public ControlGroup
